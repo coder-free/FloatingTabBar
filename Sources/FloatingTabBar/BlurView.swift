@@ -1,9 +1,9 @@
-import Foundation
 import SwiftUI
 
+#if os(iOS)
 @available(iOS 13.0, *)
 struct BlurView: UIViewRepresentable {
-
+    
     let style: UIBlurEffect.Style
 
     func makeUIView(context: UIViewRepresentableContext<BlurView>) -> UIView {
@@ -25,3 +25,25 @@ struct BlurView: UIViewRepresentable {
 
     }
 }
+#elseif os(macOS)
+@available(macOS 11.0, *)
+struct BlurView: NSViewRepresentable {
+    
+    let material: NSVisualEffectView.Material
+    let blendingMode: NSVisualEffectView.BlendingMode
+
+    func makeNSView(context: NSViewRepresentableContext<BlurView>) -> NSVisualEffectView {
+        let visualEffectView = NSVisualEffectView()
+        visualEffectView.material = material
+        visualEffectView.blendingMode = blendingMode
+        visualEffectView.state = NSVisualEffectView.State.active
+        return visualEffectView
+    }
+
+    func updateNSView(_ visualEffectView: NSVisualEffectView,
+                      context: NSViewRepresentableContext<BlurView>) {
+        visualEffectView.material = material
+        visualEffectView.blendingMode = blendingMode
+    }
+}
+#endif
